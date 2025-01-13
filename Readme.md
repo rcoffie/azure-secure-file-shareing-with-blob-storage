@@ -1,76 +1,126 @@
 # Secure File Sharing System
 
-This project provides a secure file sharing system using Terraform to manage infrastructure on Azure. It includes configurations for storage, Vault resources, and necessary providers.
-
 ## Overview
+This project demonstrates how to build a **Secure File Sharing System** using Microsoft Azure services. The system allows users to securely upload and download files while ensuring robust access control and key management.
 
-The system leverages Azure services to securely store and share files. Terraform is used to automate the deployment and management of the infrastructure.
+---
 
-## File Descriptions
+## Objectives
+The primary goal of this project is to create a secure and scalable system for file sharing, leveraging Azure's powerful services:
 
-- **.gitignore**: Specifies files and directories to be ignored by Git.
-- **notes.md**: A markdown file for project notes.
-- **terraform/**: Directory containing Terraform configuration files and state.
+1. **Azure Blob Storage** for storing files.
+2. **Azure Active Directory (AAD)** for managing access control.
+3. **Shared Access Signatures (SAS)** for secure, time-bound access.
+4. **Azure Key Vault** for secure storage and management of SAS keys.
 
-### Terraform Directory
+---
 
-- **.terraform/**: Directory containing Terraform provider plugins and modules.
-- **.terraform.lock.hcl**: Lock file to ensure consistent provider versions.
-- **main.tf**: Main Terraform configuration file.
-- **output.tf**: Defines the outputs of the Terraform configuration.
-- **storage.tf**: Terraform configuration for storage resources.
-- **terraform.tfstate**: State file that keeps track of the resources managed by Terraform.
-- **terraform.tfstate.backup**: Backup of the Terraform state file.
-- **terraform.tfvars**: Variables file for Terraform configuration.
-- **variable.tf**: Defines the input variables for the Terraform configuration.
-- **vault.tf**: Terraform configuration for Vault resources.
-- **version.tf**: Specifies the required Terraform version.
+## Features
+- Secure upload and download of files.
+- Role-based access control using Azure Active Directory.
+- Time-limited access to shared files using SAS tokens.
+- Centralized management of sensitive keys with Azure Key Vault.
 
-## Setup
+---
 
-1. **Clone the Repository**:
-    ```sh
-    git clone <repository-url>
-    cd secure_file_sharing_system
-    ```
+## Prerequisites
+- An active Microsoft Azure subscription.
+- Basic knowledge of Azure services like Azure Storage, AAD, and Key Vault.
+- Azure CLI or Azure Portal access for setup.
+- Programming knowledge in languages like Python, C#, or JavaScript (for client integration).
 
-2. **Initialize Terraform**:
-    ```sh
-    terraform init
-    ```
+---
 
-3. **Review and Customize Variables**:
-    Edit the `terraform.tfvars` file to customize the variables as per your requirements.
+## Steps to Build the System
 
-## Usage
+### 1. Set Up Azure Storage Account
+- Create an Azure Storage Account using Azure Portal or CLI.
+- Enable Azure Blob Storage within the account.
+- Define appropriate containers for file storage.
 
-1. **Plan the Infrastructure**:
-    ```sh
-    terraform plan
-    ```
+### 2. Implement Azure Active Directory (AAD) Access Control
+- Register an application in Azure Active Directory.
+- Assign necessary permissions to the registered application for accessing Blob Storage.
+- Use AAD tokens for role-based access.
 
-2. **Apply the Configuration**:
-    ```sh
-    terraform apply
-    ```
+### 3. Generate Shared Access Signature (SAS)
+- Configure SAS tokens for granting limited access to specific containers or blobs.
+- Define token permissions (read, write, delete) and set expiration times for enhanced security.
 
-3. **Destroy the Infrastructure**:
-    ```sh
-    terraform destroy
-    ```
+### 4. Use Azure Key Vault for Key Management
+- Set up an Azure Key Vault instance.
+- Store SAS keys securely in the Key Vault.
+- Use Azure Key Vault APIs to retrieve SAS tokens programmatically when required.
 
-## Providers
+---
 
-- **azuread**: Azure Active Directory provider.
-- **azurerm**: Azure Resource Manager provider.
-- **local**: Local provider.
-- **random**: Random provider.
+## Key Azure Services Used
+1. **Azure Storage**: A scalable and durable cloud storage solution.
+2. **Azure Active Directory (AAD)**: Provides identity and access management.
+3. **Azure Key Vault**: Ensures secure storage and access of sensitive keys and secrets.
 
-## Notes
+---
 
-- Ensure you have the necessary permissions and credentials to manage the resources defined in the Terraform configuration.
-- Review the `terraform.tfvars` file to customize the variables as per your requirements.
+## Example Usage
+### File Upload
+```python
+# Example code to upload a file to Azure Blob Storage using SAS token
+import requests
+
+sas_url = "<Your SAS URL>"
+file_path = "path/to/your/file.txt"
+
+with open(file_path, 'rb') as file_data:
+    response = requests.put(sas_url, data=file_data)
+    if response.status_code == 201:
+        print("File uploaded successfully!")
+    else:
+        print(f"Failed to upload file: {response.status_code}")
+```
+
+### File Download
+```python
+# Example code to download a file from Azure Blob Storage using SAS token
+import requests
+
+sas_url = "<Your SAS URL>"
+response = requests.get(sas_url)
+
+if response.status_code == 200:
+    with open("downloaded_file.txt", 'wb') as file:
+        file.write(response.content)
+    print("File downloaded successfully!")
+else:
+    print(f"Failed to download file: {response.status_code}")
+```
+
+---
+
+## Security Best Practices
+- Use short-lived SAS tokens to minimize exposure.
+- Regularly rotate keys stored in Azure Key Vault.
+- Implement least privilege access in Azure Active Directory.
+- Enable logging and monitoring for Azure Storage and Key Vault.
+
+---
+
+## Future Enhancements
+- Add logging and monitoring for all file-sharing activities.
+- Implement alerts for suspicious activity.
+- Enable advanced data encryption at rest and in transit.
+- Integrate with third-party IAM solutions for extended access control.
+
+---
 
 ## License
+This project is licensed under the [MIT License](LICENSE).
 
-This project is licensed under the MIT License.
+---
+
+## Contributions
+Contributions are welcome! Feel free to submit issues and pull requests to improve this project.
+
+---
+
+## Acknowledgments
+Special thanks to Microsoft Azure for providing robust services that power this solution.
