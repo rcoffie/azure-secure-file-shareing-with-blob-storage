@@ -77,17 +77,17 @@ provider "azurerm" {
   features {}
 }
 
-resource "azurerm_storage_account" "example" {
-  name                     = "examplestorageacct"
-  resource_group_name      = "example-resources"
+resource "azurerm_storage_account" "storage-account" {
+  name                     = "storage-account name"  # must be unique
+  resource_group_name      = "storage-resource-group-name"
   location                 = "East US"
   account_tier             = "Standard"
   account_replication_type = "LRS"
 }
 
-resource "azurerm_key_vault" "example" {
-  name                = "example-keyvault"
-  resource_group_name = "example-resources"
+resource "azurerm_key_vault" "storage-keyvault" {
+  name                = "storage-keyvault"
+  resource_group_name = "storage-account-resrouce-group-name"
   location            = "East US"
   sku_name            = "standard"
 }
